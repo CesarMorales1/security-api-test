@@ -4,14 +4,22 @@
   "description": "Enfocado en el backend",
   "main": "index.js",
   "scripts": {
-    "test": "node --watch --env-file .env index.js"
+    "test": "node --watch --env-file .env index.js",
+    "certificados": "node --env-file .env ./app/utils/certificadosSsl.js"
   },
   "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "express-validator": "^7.1.0",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.15.0",
+    "selfsigned": "^2.4.1"
   }
 }

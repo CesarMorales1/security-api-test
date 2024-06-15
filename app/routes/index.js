@@ -18,7 +18,6 @@ try
         if (directory === 'index.js' || !/\.js$/.test(directory)) continue;
         const routePath = `/${removeExtension(directory)}`;
         const routerHandler  = (await import(`./${versionToUse}/${directory}`)).default;
-        console.log(routePath);
         routesToUse.use(routePath,routerHandler);
     }
 
