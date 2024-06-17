@@ -53,6 +53,7 @@ const validateUserData = [
   singleValidation('email', 'email'),
   singleValidation('password', 'text'),
   singleValidation('numero', 'number'),
+  singleValidation('image', 'text'),
   singleValidation('numero', 'length', { min: 11, max: 11 }),
   handleValidationErrors
 ];

@@ -5,7 +5,8 @@ import morgan      from "morgan";
 import path        from "node:path";
 import fs          from "node:fs"
 import https       from "node:https"
-
+import cookieParser from "cookie-parser";
+//creando servidor
 const app = express();
 
 const PORT = process.env.PORT ?? 3000;
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Rutas
 app.use(`/${process.env.ROUTE_VERSION}/`, routesToUse);

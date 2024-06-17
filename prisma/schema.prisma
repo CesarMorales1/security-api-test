@@ -1,24 +1,89 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["Educational", "Users", "Videos"]
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  username String @unique
-  email    String @unique
-  password String
-  numero   String
-  roleId   String @db.ObjectId
-  role     Role   @relation(fields: [roleId], references: [id], name: "UserRole")
+  id          Int           @id(map: "id_user_pk") @default(autoincrement())
+  username    String        @db.VarChar(30) @unique
+  email       String        @db.VarChar(255) @unique
+  password    String
+  status      String        @db.Char(1) @default("A")
+
+  // One-to-one relationship with Profile (optional)
+  profile     Profile?      @relation(map: "user_profile_fk")
+
+  // One-to-many relationship with UserHasRoles
+  userHasRoles UserHasRoles[]
+
+  // Many-to-many relationship with Permission
+  permissions UserPermission[]
+
+  @@schema("Users")
+}
+
+model Profile {
+  id       Int      @id(map: "id_profile_pk") @default(autoincrement())
+  numero    String    @db.VarChar(20)
+  image     String?   @db.VarChar(255)
+
+  // One-to-one relationship with User
+  user      User     @relation(fields: [id], references: [id], map: "user_profile_fk")
+
+  @@schema("Users")
+}
+
+model UserHasRoles {
+  id       Int      @id(map: "id_user_has_roles_pk") @default(autoincrement())
+  userId   Int      
+  roleId   Int       
+  status    String    @db.Char(1)       @default("A")
+
+  // Many-to-one relationship with User
+  user      User     @relation(fields: [userId], references: [id], map: "user_has_roles_fk")
+
+  // Many-to-one relationship with Role
+  role      Role     @relation(fields: [roleId], references: [id], map: "role_user_has_roles_fk")
+
+  @@schema("Users")
 }
 
 model Role {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  roleName String
-  users    User[]  @relation(name: "UserRole")
+  id       Int      @id(map: "id_role_pk") @default(autoincrement())
+  name      String    @db.VarChar(50)   @unique
+  status    String    @db.Char(1)       @default("A")
+
+  // One-to-many relationship with UserHasRoles
+  userHasRoles UserHasRoles[]
+
+  @@schema("Users")
+}
+
+model Permission {
+  id       Int      @id(map: "id_permission_pk") @default(autoincrement())
+  name      String    @db.VarChar(50)   @unique
+  description String? @db.VarChar(255)
+  status    String    @db.Char(1)       @default("A")
+
+  // Many-to-many relationship with User
+  users UserPermission[]
+
+  @@schema("Users")
+}
+
+model UserPermission {
+  userId       Int
+  permissionId Int
+
+  user       User       @relation(fields: [userId], references: [id], map: "user_permissions_fk")
+  permission Permission @relation(fields: [permissionId], references: [id], map: "permission_users_fk")
+
+  @@id([userId, permissionId])
+  @@schema("Users")
 }
