@@ -3,7 +3,7 @@ import prisma               from "../models/prisma.js";
 import { Prisma }           from "@prisma/client";
 import responseService      from "../models/responseService.js";
 import { toUser }           from "../models/user.js";
-import { UserPermission }   from "../models/permisosDefautl.js";
+import { TeacherPermission, UserPermission }   from "../models/permisosDefautl.js";
 import jwt                  from "jsonwebtoken"
 import cookieParser         from "cookie-parser";
 
@@ -49,6 +49,13 @@ export class AuthService {
                     permisoArray.push({ permissionId: id });
                 });
             }
+            if(roles === 2)
+                {
+                    TeacherPermission.teacherPermission.map(id =>
+                        {
+                            permisoArray.push({permissionId: id})
+                        })
+                }
             
             const newUser = await prisma.user.create({
                 data: {

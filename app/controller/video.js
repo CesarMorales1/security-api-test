@@ -7,7 +7,8 @@ const uploadVideo = async(req,res,next) =>
         try {
             const validToken = jwtVerification(req.cookies.access_token);
             if(!validToken) throw new Error('Por favor logueate de nuevo');
-            const hasPermission = permissionChecker(validToken.permisos);
+            console.log(validToken);
+            const hasPermission = permissionChecker(validToken.permisos,3);
             if(!hasPermission) throw new Error('Not authorized');
             const responseService = await VideoService.uploadVideo(req.body)
             if(!responseService.success) return responseApi.error(res,undefined,'Hubo un error al crear el video',500);
