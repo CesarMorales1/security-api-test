@@ -87,3 +87,11 @@ model UserPermission {
   @@id([userId, permissionId])
   @@schema("Users")
 }
+
+model Video {
+  id          Int      @id @default(autoincrement())
+  url         String   @unique
+  titulo      String
+  descripcion String
+  @@schema("Videos")
+}

@@ -105,7 +105,7 @@ export class AuthService {
                 where: { email: email },
                 select: { id: true,password: true,permissions: true }
             });
-    
+            if(!databaseResponse) throw new Error('Usuario o password incorrecta')
             //si el usuario existe comparar clave
             const isValid = await compare(password,databaseResponse.password);
             if(!isValid) throw new Error('Wrong password');
@@ -119,7 +119,7 @@ export class AuthService {
             //creando token de session
             const jwtToken = jwt.sign(publicUser,process.env.__PRIVATE_KEY,
                 {
-                    expiresIn: '2h'
+                    expiresIn: '2h',
                 });
                 //guardando en las cookies para evitar un ataque de crosshair scripting ademas las cookies tienen http-only y ademas con https da mas seguridad evitando ataques man-in-the-middle CSRF
 

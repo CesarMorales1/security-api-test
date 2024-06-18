@@ -36,6 +36,11 @@ const singleValidation = (field, validationType, options = {}) => {
                           .notEmpty().withMessage(MensajesComunes.campoNecesario)
                           .isLength({ min: options.min, max: options.max }).withMessage(MensajesComunes.tamanoErroneo(options.max));
       }
+      case 'url':
+        return check(field).exists().withMessage(MensajesComunes.campoNecesario)
+        .notEmpty().withMessage(MensajesComunes.campoNecesario)
+        .isURL().withMessage(MensajesComunes.errorEnFormato);
+      
       break;
     default:
       return null;
@@ -48,6 +53,15 @@ const loginValidation = [
   handleValidationErrors
 ];
 
+const videoValidation = 
+[
+  singleValidation('url','text'),
+  singleValidation('titulo','text'),
+  singleValidation('descripcion','text'),
+  singleValidation('url','url'),
+  handleValidationErrors
+]
+
 const validateUserData = [
   singleValidation('username', 'text'),
   singleValidation('email', 'email'),
@@ -58,4 +72,4 @@ const validateUserData = [
   handleValidationErrors
 ];
 
-export { validateUserData, singleValidation, loginValidation };
+export { validateUserData, singleValidation, loginValidation,videoValidation };
